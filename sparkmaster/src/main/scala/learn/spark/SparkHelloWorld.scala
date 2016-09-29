@@ -7,7 +7,7 @@ object SparkHelloWorld {
   val home = System.getenv("HOME")
   println("Home===============>>> " + home)
 
-   val warehouseLocation = "file:///" + home + "/sparkmaster"
+  val warehouseLocation = "file:///" + home + "/sparkmaster"
 
   def main(args: Array[String]): Unit = {
     System.setProperty("hadoop.home.dir", home + "/sparkmaster/winutils/hadoop-common-2.2.0-bin-master")
@@ -36,7 +36,7 @@ object SparkHelloWorld {
     addrColumnsRDD.saveAsTextFile(outputFolder+2)
     
     while (true){
-      
+      // do nothing
     }
   }
 }
