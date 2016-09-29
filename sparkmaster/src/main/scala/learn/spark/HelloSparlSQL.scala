@@ -9,8 +9,6 @@ import org.apache.spark.sql.SaveMode
 
 object HelloSparlSQL {
   val home = System.getenv("HOME")
-  println("Home===============>>> " + home)
-
   val warehouseLocation = home + "/sparkmaster"
 
   def main(args: Array[String]): Unit = { 
