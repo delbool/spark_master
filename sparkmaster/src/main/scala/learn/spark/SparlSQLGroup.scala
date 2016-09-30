@@ -25,15 +25,16 @@ object SparlSQLGroup {
       .toDF()
 
     addressDF.show()
-
-    val addressGroupDF = addressDF.rdd.groupBy(row => row.get(1));    
-    println("============>  GROUPED ADDRESSSES: =====================");
-    addressGroupDF.foreach(println)
-
+    
     val outputPath = warehouseLocation + "/JSON_Output";
     //remove destination folder in preparation for new output
     FileUtils.deleteDirectory(new File(outputPath));
 
+    val addressGroupDF = addressDF.rdd.map(row => (row(0), row)) 
+    println("============>  GROUPED ADDRESSSES: =====================");
+    addressGroupDF.collect().foreach(println);
+    addressGroupDF.saveAsTextFile(outputPath+3)
+    
   //write.json(outputPath);
   addressDF.toJSON.write.json(outputPath);
 //    addressDF.write.mode("append").format("json").save(outputPath)
