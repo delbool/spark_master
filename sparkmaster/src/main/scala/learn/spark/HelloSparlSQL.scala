@@ -18,8 +18,7 @@ object HelloSparlSQL {
     val sparkSession = getSQLSession;
 
     val addressDF = sparkSession.read
-      //.format("com.databricks.spark.csv")
-      .format("csv")
+      .format("com.databricks.spark.csv")
       .option("header", "true")
       .option("mode", "DROPMALFORMED")
       .load("file:///" + warehouseLocation + "/input/address_with_header.csv")
@@ -31,21 +30,22 @@ object HelloSparlSQL {
     //remove destination folder in preparation for new output
     FileUtils.deleteDirectory(new File(outputPath));
 
-//  addressDF.write.json(outputPath);
-  addressDF.toJSON.write.json(outputPath);
-//    addressDF.write.mode("append").format("json").save("file:///" + outputPath)
+  addressDF.write.json(outputPath);
+//  addressDF.toJSON.write.json(outputPath);
+//    addressDF.write.mode("append").format("json").save(outputPath)
     
     // Register the DataFrame as a temporary view of 'address'
     addressDF.createOrReplaceTempView("address")
 
-    val addressDF2 = addressDF.sparkSession.sql("SELECT * FROM address");
+//    val addressDF2 = addressDF.sparkSession.sql("SELECT * FROM address");
+    addressDF.select("*").write.json(outputPath + "1");
 
-    addressDF2.printSchema();
+    addressDF.select("*").printSchema();
 
     //val addressJsonRdd = addressDF.toJSON.rdd;
     val addressJsonRdd = addressDF.toJSON.rdd;
 
-    addressJsonRdd.saveAsTextFile("file:///" + warehouseLocation + "/JSON_Output2");
+    addressJsonRdd.saveAsTextFile( warehouseLocation + "/JSON_Output2");
 //    addressDF.write.format("json").mode(SaveMode.Overwrite).save(warehouseLocation + "/JSON_Output2");
 
     while (true) {
