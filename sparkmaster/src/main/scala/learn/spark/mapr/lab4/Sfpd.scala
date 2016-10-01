@@ -1,4 +1,4 @@
-package learn.spark.mapr
+package learn.spark.mapr.lab4
 
 /* This is an exercise from MapR training DEV 361 - Apache Spark 361 */
 
