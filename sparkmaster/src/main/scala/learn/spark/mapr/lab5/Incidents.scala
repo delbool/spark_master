@@ -4,6 +4,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.SaveMode
+import org.apache.spark.storage.StorageLevel
 
 object Incidents {
 
@@ -53,6 +54,11 @@ object Incidents {
       .map(inc => Incidents(inc(0), inc(1), inc(2), inc(3), inc(4), inc(5), inc(6), inc(7), inc(8), inc(9).toFloat, inc(10).toFloat, inc(11)))
     val incidentsDF = incidentsCaseRDD.toDF()
    
+    // it is used so many times so persist it
+    incidentsDF.persist(StorageLevel.MEMORY_ONLY)
+    // You can also use cache for memory storage only
+    /* incidentsDF.cache */
+    
     // register it as a temp table so that we can run queries on it
     incidentsDF.createOrReplaceTempView("incidents")
 
@@ -86,6 +92,18 @@ object Incidents {
     //incidentsDF.drop("dayOfWeek", "date", "time", "pdDistrict", "resolution", "address").printSchema();
     incidentsDF.drop("dayOfWeek", "date", "time", "pdDistrict", "resolution", "address").explain();
 
+    // show top 5 addresses with most incidetns
+    val incByAddr = incidentsDF.groupBy("address")
+    val numAddr = incByAddr.count
+    val numAddrDesc = numAddr.sort($"count".desc)
+    val to5Addr = numAddrDesc.show(5)
+    
+    
+    // as one command using the builder pattern
+    val top5AddrByIncident = incidentsDF.groupBy("address")
+                              .count()
+                              .sort($"count".desc)
+                              .show(5);
     
         
   }
