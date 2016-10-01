@@ -19,12 +19,17 @@ object Incidents {
 
   def main(args: Array[String]): Unit = {
 
+    val startTime = System.currentTimeMillis()
+    
     val sparkSession = SparkSession.builder()
       .appName("Incidents")
       .config("spark.sql.warehouse.dir", warehouseLocation)
       .master("local")
       .getOrCreate();
 
+    // making the logs less noisy
+    sparkSession.sparkContext.setLogLevel("WARN")
+    
     //Map input variables
     val IncidntNum = 0
     val Category = 1
@@ -106,5 +111,7 @@ object Incidents {
                               .show(5);
     
         
+    val endTime = System.currentTimeMillis()
+    println("Total time taken : " + (endTime - startTime) + " ms") 
   }
 }
