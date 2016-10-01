@@ -26,14 +26,22 @@ object SparlSQLGroup {
 
     addressDF.show()
 
-    val addressGroupDF = addressDF.rdd.groupBy(row => row.get(1));    
+    //val addressGroupDF = addressDF.rdd.groupBy(row => row.get(1));    
+    val addressGroupDF = addressDF.rdd.groupBy(row => row.fieldIndex("AppId"));    
+
     println("============>  GROUPED ADDRESSSES: =====================");
     addressGroupDF.foreach(println)
-
+    val addressGroupRDD = addressGroupDF.map(addr => (addr._1, addr._2));
+    
     val outputPath = warehouseLocation + "/JSON_Output";
     //remove destination folder in preparation for new output
     FileUtils.deleteDirectory(new File(outputPath));
+    FileUtils.deleteDirectory(new File(outputPath + 1));
+    FileUtils.deleteDirectory(new File(outputPath + 2));
+    FileUtils.deleteDirectory(new File(outputPath + 3));
 
+    addressGroupRDD.saveAsTextFile(outputPath + 3)
+    
   //write.json(outputPath);
   addressDF.toJSON.write.json(outputPath);
 //    addressDF.write.mode("append").format("json").save(outputPath)
