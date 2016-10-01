@@ -103,13 +103,17 @@ object Incidents {
     val numAddrDesc = numAddr.sort($"count".desc)
     val to5Addr = numAddrDesc.show(5)
     
+    println("==================>> numAddr is this a number or not? " + numAddr)
     
-    // as one command using the builder pattern
+    // top five addresses with highest incidents as one command using the builder pattern
     val top5AddrByIncident = incidentsDF.groupBy("address")
                               .count()
                               .sort($"count".desc)
                               .show(5);
-    
+    // top five addresses with highest incidents as one command using sql
+    println("!!!!!!!!!!!!!!!!!============>> Using SQL Query. SQL keywords are not case sensitive") 
+    sqlContext.sql("SeLeCT address, count(incidentNum) as incidentCount from incidents "
+      + "gRoup BY ADDRESS order BY INCIDENTCOUNT DeSC LiMIT 5").show()
         
     val endTime = System.currentTimeMillis()
     println("Total time taken : " + (endTime - startTime) + " ms") 
