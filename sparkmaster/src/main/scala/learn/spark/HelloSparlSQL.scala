@@ -45,9 +45,12 @@ object HelloSparlSQL {
     //val addressJsonRdd = addressDF.toJSON.rdd;
     val addressJsonRdd = addressDF.toJSON.rdd;
 
-    addressJsonRdd.saveAsTextFile( warehouseLocation + "/JSON_Output2");
-//    addressDF.write.format("json").mode(SaveMode.Overwrite).save(warehouseLocation + "/JSON_Output2");
+    //addressJsonRdd.saveAsTextFile( warehouseLocation + "/JSON_Output2");
+    addressDF.write.format("json").mode(SaveMode.Overwrite).save(warehouseLocation + "/JSON_Output2");
 
+    addressDF.join(addressDF)
+
+    
     while (true) {
       // do nothing - waste time here until you get interrupted
     }

@@ -39,7 +39,7 @@ object IncidentsMonitor {
     val Y = 10
     val PdId = 11
 
-    val incidentsRDD = sparkSession.sparkContext.textFile("file:///C:/Downloads/MapR/DEV3600_LAB_DATA/data/sfpd.csv").map(line => line.split(","));
+    val incidentsRDD = sparkSession.sparkContext.textFile("file:///C:/Downloads/BIG_DATA/MapR/DEV3600_LAB_DATA/data/sfpd.csv").map(line => line.split(","));
     //    val incidents = sparkSession.sparkContext.textFile("file:///C:/Downloads/MapR/DEV3600_LAB_DATA/data/sfpd.csv")
     //    val incidentsRDD = incidents.map(line => line.split(","));
     //    val resolutionRaw = incidentsRDD.map(incident => incident(Resolution))
