@@ -24,10 +24,10 @@ object ApplicantsWithSchema {
     val applicantSchema = StructType(applicantSchemaStr.split(",").map(fieldName => StructField(fieldName, StringType, true)))
     println("=================>> Number of columns: " + applicantSchema.fields.length)
     
-    // read the data file (sqoop file for example) and map it to the schema to create an Row RDD
+    // read the data file (sqoop file for example) and map it to the schema to create a Row RDD
     val applicantRDD = sparkSession.sparkContext.textFile(warehouseLocation + "/input/applicants.csv")
                         .map(line => line.split(","))
-                        .map(app => Row(app(0), app(1),app(2), app(3),app(4), app(5)));
+                        .map(app => Row(app(0), app(1), app(2), app(3),app(4), app(5)));
     
     // create a DataFrame from the Row RDD and the schema
     val applicantDataFrame = sparkSession.sqlContext.createDataFrame(applicantRDD, applicantSchema)
