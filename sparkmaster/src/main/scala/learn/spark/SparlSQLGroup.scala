@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.DataFrameWriter
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.SaveMode
+import scala.util.control.Breaks
 
 object SparlSQLGroup {
   val home = System.getenv("HOME")
@@ -77,9 +78,12 @@ object SparlSQLGroup {
     addressJsonRdd2.saveAsTextFile( warehouseLocation + "/JSON_Output2");
     //addressDF.write.format("json").mode(SaveMode.Overwrite).save(warehouseLocation + "/JSON_Output2");
 
-    while (true) {
-      // do nothing - waste time here until you get interrupted
+    val loop = new Breaks;
+    loop.breakable{
+      Thread.sleep(5000);
+      loop.break
     }
+
   }
 
   def handleWinUtilsError {
