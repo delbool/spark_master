@@ -7,6 +7,8 @@ object PigToSpark101 {
     // set environment variables first
     val home = System.getenv("HOME")
     val warehouseLocation = home + "/sparkmaster"
+    System.setProperty("hadoop.home.dir", home + "/sparkmaster/winutils/hadoop-common-2.2.0-bin-master")
+
     val startTime = System.currentTimeMillis()
 
     val sparkSession = SparkSession.builder()
@@ -22,7 +24,7 @@ object PigToSpark101 {
       .format("com.databricks.spark.csv")
       .option("header", "true")
       .option("mode", "DROPMALFORMED")
-      .load("file:///" + warehouseLocation + "/input/applicants.csv")
+      .load("file:///" + warehouseLocation + "/input/applicants_with_header.csv")
       .toDF()
 
     applicantsDF.show(10)
@@ -31,7 +33,7 @@ object PigToSpark101 {
       .format("com.databricks.spark.csv")
       .option("header", "true")
       .option("mode", "DROPMALFORMED")
-      .load("file:///" + warehouseLocation + "/input/address.csv")
+      .load("file:///" + warehouseLocation + "/input/address_with_header.csv")
       .toDF()
 
     addressDF.show(10)
