@@ -12,7 +12,7 @@ object SparlSQLGroup {
   val home = System.getenv("HOME")
   val warehouseLocation = home + "/sparkmaster"
 
-  def main(args: Array[String]): Unit = { 
+  def main(args: Array[String]): Unit = {
     // let us first take care of this error message
     /* ==>> Could not locate executable null\bin\winutils.exe in the Hadoop binaries. */
     handleWinUtilsError;
@@ -28,12 +28,12 @@ object SparlSQLGroup {
     addressDF.show()
 
     //val addressGroupDF = addressDF.rdd.groupBy(row => row.get(1));    
-    val addressGroupDF = addressDF.rdd.groupBy(row => row.fieldIndex("AppId"));    
+    val addressGroupDF = addressDF.rdd.groupBy(row => row.fieldIndex("AppId"));
 
     println("============>  GROUPED ADDRESSSES: =====================");
     addressGroupDF.foreach(println)
     val addressGroupRDD = addressGroupDF.map(addr => (addr._1, addr._2));
-    
+
     val outputPath = warehouseLocation + "/JSON_Output";
     //remove destination folder in preparation for new output
     FileUtils.deleteDirectory(new File(outputPath));
@@ -42,15 +42,15 @@ object SparlSQLGroup {
     FileUtils.deleteDirectory(new File(outputPath + 3));
 
     addressGroupRDD.saveAsTextFile(outputPath + 3)
-    
-  //write.json(outputPath);
-  addressDF.toJSON.write.json(outputPath);
-//    addressDF.write.mode("append").format("json").save(outputPath)
-    
+
+    //write.json(outputPath);
+    addressDF.toJSON.write.json(outputPath);
+    //    addressDF.write.mode("append").format("json").save(outputPath)
+
     // Register the DataFrame as a temporary view of 'address'
     addressDF.createOrReplaceTempView("address")
 
-//    val addressDF2 = addressDF.sparkSession.sql("SELECT * FROM address");
+    //    val addressDF2 = addressDF.sparkSession.sql("SELECT * FROM address");
     addressDF.select("*").write.json(outputPath + "1");
 
     addressDF.select("*").printSchema();
@@ -61,27 +61,25 @@ object SparlSQLGroup {
     var i = 0;
     val totalCount = addressJsonRdd.count()
     val addressJsonRdd2 = addressJsonRdd.map(line => {
-          i = i + 1;
-          if (i == 1){
-            "[" + line + ","
-          }
-          else if ( i == totalCount){
-            line + "]"
-          }
-          else {
-            line + "," 
-          }
-        }
-    )
+      i = i + 1;
+      if (i == 1) {
+        "[" + line + ","
+      } else if (i == totalCount) {
+        line + "]"
+      } else {
+        line + ","
+      }
+    })
 
-    
-    addressJsonRdd2.saveAsTextFile( warehouseLocation + "/JSON_Output2");
+    addressJsonRdd2.saveAsTextFile(warehouseLocation + "/JSON_Output2");
     //addressDF.write.format("json").mode(SaveMode.Overwrite).save(warehouseLocation + "/JSON_Output2");
 
     val loop = new Breaks;
-    loop.breakable{
-      Thread.sleep(5000);
-      loop.break
+    loop.breakable {
+      while (true) {
+        Thread.sleep(5000);
+        loop.break
+      }
     }
 
   }
