@@ -9,6 +9,7 @@ class Person(val name: String, val female: Boolean) {
     }
     
     val names = for(person <- people) yield person.name
+    println("\n----> Printing all names")
     for(name <- names) println("Name: " + name)
     
     println("\nNested Yeild ...")
@@ -49,5 +50,6 @@ object Person {
 
     val groups = List(ewings, outsiders);
     p.printNestedNames(groups);
+    
   }
 }
