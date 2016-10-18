@@ -57,8 +57,25 @@ object SparlSQLGroup {
     //val addressJsonRdd = addressDF.toJSON.rdd;
     val addressJsonRdd = addressDF.toJSON.rdd;
 
-    addressJsonRdd.saveAsTextFile( warehouseLocation + "/JSON_Output2");
-//    addressDF.write.format("json").mode(SaveMode.Overwrite).save(warehouseLocation + "/JSON_Output2");
+    var i = 0;
+    val totalCount = addressJsonRdd.count()
+    val addressJsonRdd2 = addressJsonRdd.map(line => {
+          i = i + 1;
+          if (i == 1){
+            "[" + line + ","
+          }
+          else if ( i == totalCount){
+            line + "]"
+          }
+          else {
+            line + "," 
+          }
+        }
+    )
+
+    
+    addressJsonRdd2.saveAsTextFile( warehouseLocation + "/JSON_Output2");
+    //addressDF.write.format("json").mode(SaveMode.Overwrite).save(warehouseLocation + "/JSON_Output2");
 
     while (true) {
       // do nothing - waste time here until you get interrupted
