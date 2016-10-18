@@ -11,6 +11,7 @@ object ApplicantsWithSchema2 {
     // set environment variables first
     val home = System.getenv("HOME")
     val warehouseLocation = home + "/sparkmaster"
+    System.setProperty("hadoop.home.dir", home + "/sparkmaster/winutils/hadoop-common-2.2.0-bin-master")
 
     val sparkSession = SparkSession.builder()
       .appName("Applicants")
