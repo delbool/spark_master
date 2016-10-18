@@ -2,6 +2,7 @@ package learn.spark
 
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
+import scala.util.control.Breaks
 
 object SparkHelloWorld {
   val home = System.getenv("HOME")
@@ -35,8 +36,10 @@ object SparkHelloWorld {
     val addrColumnsRDD = addressRDD.flatMap(row => row.split(","))
     addrColumnsRDD.saveAsTextFile(outputFolder+2)
     
-    while (true){
-      // do nothing
+    val loop = new Breaks;
+    loop.breakable{
+      Thread.sleep(5000);
+      loop.break
     }
   }
 }
