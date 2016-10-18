@@ -36,6 +36,10 @@ object Hello {
     })
 
     println(list4);
+    
+
+    val list5 = "[" + list3 + "]";
+    println(list5);
 
   }
 
