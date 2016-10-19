@@ -70,6 +70,7 @@ object PigToSpark103 {
     allJoinedDS.show(false) // do not truncate when you show
     
     // http://stackoverflow.com/questions/35444971/perform-group-by-on-rdd-in-spark-and-write-each-group-as-individual-parquet-file
-    allJoinedDS.write.partitionBy("pid").mode(SaveMode.Overwrite).json(warehouseLocation + "/OutputPig")
+    // http://stackoverflow.com/questions/29908892/save-a-large-spark-dataframe-as-a-single-json-file-in-s3
+    allJoinedDS.repartition(1).write.mode(SaveMode.Overwrite).json(warehouseLocation + "/OutputPig")
   }
 }
