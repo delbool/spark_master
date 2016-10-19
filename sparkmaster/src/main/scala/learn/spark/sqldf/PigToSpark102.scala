@@ -1,6 +1,11 @@
 package learn.spark.sqldf
 
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StringType
+import org.apache.avro.data.Json
 
 object PigToSpark102 {
 
@@ -27,21 +32,28 @@ object PigToSpark102 {
     import sparkSession._
     import sparkSession.implicits._
 
-    val applicantsRDD1 = applicantsRDD.map(app => Applicants(app(0), app(1), app(2), app(3), app(4), app(5)));
-    println("=================>> Step 1")
-    val applicantsDF = applicantsRDD1.toDF()
-    println("=================>> Step 2")
+    val applicantsRDD1 = applicantsRDD.map(row => Row.fromSeq(row.toSeq));
+    val applicantSchemaStr = "Id,FirstName,LastName,DOB,ApprovalStatus,BirthCountry";
+    val applicantSchema = StructType(applicantSchemaStr.split(",").map(fieldName => StructField(fieldName, StringType, true)))
+    val applicantDataFrame = sparkSession.sqlContext.createDataFrame(applicantsRDD1, applicantSchema)
 
-    val addressRDD1 = addressRDD.map(add => Address(add(0), add(1), add(2), add(3), add(4), add(5), add(6)))
-    println("=================>> Step 3")
-    val addressDF = addressRDD1.toDF();
-    println("=================>> Step 4")
 
-//    val addressGroupDF = addressDF.groupByKey("AppId")
-//    addressGroupDF.rdd.foreach(println)
+    val addressRDD1 = addressRDD.map(add => Row.fromSeq(add.toSeq)) 
+    val addressSchemaStr = "Id,AppId,AddressType,StreetAddress,City,State,Zip";
+    val addressSchema = StructType(addressSchemaStr.split(",").map(fieldName => StructField(fieldName, StringType, true)))
+    val addressDataFrame = sparkSession.sqlContext.createDataFrame(addressRDD1, addressSchema)
+
+    applicantDataFrame.show()
+    addressDataFrame.show()
     
-    //addressGroupDF.show(8)
+    val addressRdd2 = addressDataFrame.rdd.map(add => (add(add.fieldIndex("AppId")), add)).groupByKey();
+    addressRdd2.foreach(println)
+    
+    addressRdd2.toDF();
 
+//    val outputPath = warehouseLocation + "/Output9";
+//    addressRdd2.toDF().write.mode("append").format("json").save(outputPath);
+    
 //    val applicantsJoinAddress = applicantsDF.join(addressGroupDF, applicantsDF("Id") <=> addressGroupDF(0), "left");
 //    applicantsJoinAddress.show(50)
 
