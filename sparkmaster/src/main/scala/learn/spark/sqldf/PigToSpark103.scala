@@ -1,5 +1,7 @@
 package learn.spark.sqldf
 
+import org.apache.spark.annotation.Experimental
+import org.apache.spark.sql.SaveMode
 import org.apache.spark.sql.SparkSession
 
 // helpful source
@@ -24,7 +26,7 @@ object PigToSpark103 {
     System.setProperty("hadoop.home.dir", home + "/sparkmaster/winutils/hadoop-common-2.2.0-bin-master")
 
     val sparkSession = SparkSession.builder()
-      .appName("Incidents")
+      .appName("Patient Info")
       .config("spark.sql.warehouse.dir", warehouseLocation)
       .master("local")
       .getOrCreate();
@@ -64,6 +66,10 @@ object PigToSpark103 {
 
     val allJoinedDS = allJoined.as[Patient]
 
-    allJoinedDS show false
+    //  allJoinedDS.show(false) ==  allJoinedDS show false
+    allJoinedDS.show(false) // do not truncate when you show
+    
+    // http://stackoverflow.com/questions/35444971/perform-group-by-on-rdd-in-spark-and-write-each-group-as-individual-parquet-file
+    allJoinedDS.write.partitionBy("pid").mode(SaveMode.Overwrite).json(warehouseLocation + "/OutputPig")
   }
 }
