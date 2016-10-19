@@ -72,5 +72,22 @@ object PigToSpark103 {
     // http://stackoverflow.com/questions/35444971/perform-group-by-on-rdd-in-spark-and-write-each-group-as-individual-parquet-file
     // http://stackoverflow.com/questions/29908892/save-a-large-spark-dataframe-as-a-single-json-file-in-s3
     allJoinedDS.repartition(1).write.mode(SaveMode.Overwrite).json(warehouseLocation + "/OutputPig")
+
+     // More work needed here
+//    var i = 0
+//    val totalCount = allJoinedDS.count()
+//    val finalAllJoinedDS = allJoinedDS.rdd.map(line => {
+//      i = i + 1;
+//      if (i == 1) {
+//        "[" + line + ","
+//      } else if (i == totalCount) {
+//        line + "]"
+//      } else {
+//        line + ","
+//      }
+//    }).toDF().as[Patient]
+//    
+//    finalAllJoinedDS.repartition(1).write.mode(SaveMode.Overwrite).json(warehouseLocation + "/OutputPig")
+    
   }
 }
