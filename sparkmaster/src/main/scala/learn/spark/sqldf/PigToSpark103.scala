@@ -45,17 +45,17 @@ object PigToSpark103 {
     import sparkSession._
     import sparkSession.implicits._
     
-    val claimPairRDD = claimRDD.map(x => (x.pid, x.diag1, x.diag2))
+    //val claimPairRDD = claimRDD.map(x => (x.pid, x.diag1, x.diag2))  //not used so why is this here
     val claimDS = claimRDD.toDF("pid", "diag1", "diag2").as[Claim]
     val claimsDSGroupedByPID = claimDS.groupByKey(v => v.pid)
     val gClaims = claimsDSGroupedByPID.mapGroups({ case (k, iter) => PatientClaims(k, iter.map(x => Claim(x.pid, x.diag1, x.diag2)).toArray) })
 
-    val labPairRDD = labRDD.map(x => (x.pid, x))
+    //val labPairRDD = labRDD.map(x => (x.pid, x)) //not used so why is this here
     val labDS = labRDD.toDF("pid", "lab1", "lab2").as[Lab]
     val labDSGroupedByPID = labDS.groupByKey(v => v.pid)
     val gLabs = labDSGroupedByPID.mapGroups({ case (k, iter) => PatientLab(k, iter.map(x => Lab(x.pid, x.lab1, x.lab2)).toArray) })
 
-    val rxclaimPairRDD = rxclaimRDD.map(x => (x.pid, x))
+    //val rxclaimPairRDD = rxclaimRDD.map(x => (x.pid, x)) //not used so why is this here
     val rxClaimDS = rxclaimRDD.toDF("pid", "drug1", "drug2").as[RxClaim]
     val rxClaimsDSGroupedByPID = rxClaimDS.groupByKey(v => v.pid)
     val gRxClaim = rxClaimsDSGroupedByPID.mapGroups({ case (k, iter) => PatientRxClaim(k, iter.map(x => RxClaim(x.pid, x.drug1, x.drug2)).toArray) })
